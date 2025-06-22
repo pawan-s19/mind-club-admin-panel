@@ -1,9 +1,5 @@
 import { useCallback } from "react";
 import ComponentCard from "../../common/ComponentCard";
-import Label from "../Label";
-import Input from "../input/InputField";
-import { FileIcon } from "../../../icons";
-import PhoneInput from "../group-input/PhoneInput";
 import FileInput from "../input/FileInput";
 
 interface BrochureProps {
@@ -12,16 +8,6 @@ interface BrochureProps {
 }
 
 export default function Brochure({ onDataChange, onFileUpload }: BrochureProps) {
-  const countries = [
-    { code: "US", label: "+1" },
-    { code: "GB", label: "+44" },
-    { code: "CA", label: "+1" },
-    { code: "AU", label: "+61" },
-  ];
-  
-  const handlePhoneNumberChange = (phoneNumber: string) => {
-    console.log("Updated phone number:", phoneNumber);
-  };
   
   const handleFileChange = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];

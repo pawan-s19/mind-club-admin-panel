@@ -1,11 +1,8 @@
-import { useState, useCallback } from "react";
+import { useCallback, useState } from "react";
 import ComponentCard from "../../common/ComponentCard";
-import Label from "../Label";
-import Input from "../input/InputField";
-import Select from "../Select";
-import { EyeCloseIcon, EyeIcon, TimeIcon } from "../../../icons";
-import DatePicker from "../date-picker.tsx";
 import FileInput from "../input/FileInput.tsx";
+import Input from "../input/InputField";
+import Label from "../Label";
 
 interface WorkshopHeaderProps {
   onDataChange: (data: {
@@ -18,21 +15,10 @@ interface WorkshopHeaderProps {
 }
 
 export default function WorkshopHeader({ onDataChange, onFileUpload }: WorkshopHeaderProps) {
-  const [showPassword, setShowPassword] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [imageFile, setImageFile] = useState<string>('');
   const [trailerFile, setTrailerFile] = useState<string>('');
-  
-  const options = [
-    { value: "marketing", label: "Marketing" },
-    { value: "template", label: "Template" },
-    { value: "development", label: "Development" },
-  ];
-
-  // const handleSelectChange = (value: string) => {
-  //   console.log("Selected value:", value);
-  // };
 
   const handleTitleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;

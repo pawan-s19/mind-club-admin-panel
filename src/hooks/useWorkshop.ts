@@ -1,29 +1,29 @@
+import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../store/store";
+import { AppDispatch } from "../store/store";
 import {
-  createWorkshop,
-  updateHeader,
-  updateBrochure,
-  updateWorkshopType,
-  updateAbout,
-  updateLocation,
-  updateItinerary,
-  updateDates,
   clearError,
   clearSuccess,
-  resetCurrentWorkshop,
-  fetchWorkshops,
-  fetchWorkshopById,
-  updateWorkshop,
+  createWorkshop,
   deleteWorkshop,
+  fetchWorkshopById,
+  fetchWorkshops,
+  resetCurrentWorkshop,
+  updateAbout,
+  updateBrochure,
+  updateDates,
+  updateHeader,
+  updateItinerary,
+  updateLocation,
+  updateWorkshop,
+  updateWorkshopType,
   WorkshopData
 } from "../store/workshopSlice";
-import { useCallback } from "react";
 
 export const useWorkshop = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { currentWorkshop, workshops, loading, error, success } = useSelector(
-    (state: RootState) => state.workshop
+    (state: any) => state.workshop
   );
 
   return {

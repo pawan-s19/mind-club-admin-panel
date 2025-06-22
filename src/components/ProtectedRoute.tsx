@@ -1,14 +1,14 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, ReactNode } from 'react'
 import { useNavigate } from 'react-router-dom';
 
-const ProtectedRoute = ({children}) => {
+// Option 1: Using React.PropsWithChildren
+const ProtectedRoute: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   const token = localStorage.getItem('token');
   const navigate = useNavigate();
 
   // Log to confirm rendering
   console.log("ProtectedRoute rendered");
   // Debugger for development
-  debugger;
 
   useEffect(() => {
     if (!token) {

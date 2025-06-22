@@ -307,7 +307,7 @@ export default function WorkshopItinerary({ onDataChange, onDatesChange, onFileU
                         <Label>Itinerary Days ({itinerary.length} days)</Label>
                         
                         <div className="space-y-4 mt-4">
-                            {itinerary.map((day, dayIndex) => (
+                            {itinerary.map((day) => (
                                 <ComponentCard key={day.id} title={`Day ${day.day}`}>
                                     <div className="space-y-4">
                                         <div>

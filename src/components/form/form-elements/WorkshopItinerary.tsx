@@ -42,9 +42,7 @@ interface WorkshopItineraryProps {
                 description: string;
             };
             color: string;
-            _id: string;
         }>;
-        _id: string;
     }>) => void;
     onDatesChange: (startDate: string, endDate: string) => void;
     onFileUpload: (file: File) => Promise<string>;
@@ -269,9 +267,7 @@ export default function WorkshopItinerary({ onDataChange, onDatesChange, onFileU
                     description: activity.image.description
                 },
                 color: activity.color,
-                _id: activity.id
             })),
-            _id: day.id
         }));
         onDataChange(itineraryData);
     }, [itinerary, onDataChange]);

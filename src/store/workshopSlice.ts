@@ -9,7 +9,6 @@ import {
 
 // Workshop data structure interface matching your API
 export interface WorkshopData {
-  _id: string;
   header: {
     title: string;
     description: string;
@@ -32,7 +31,6 @@ export interface WorkshopData {
       imageOrVideo: {
         url: string;
       };
-      _id: string;
     }>;
   };
   location: {
@@ -44,7 +42,6 @@ export interface WorkshopData {
       imageOrVideo: {
         url: string;
       };
-      _id: string;
     }>;
   };
   startDate: string; // ISO date string
@@ -66,9 +63,7 @@ export interface WorkshopData {
         description: string;
       };
       color: string;
-      _id: string;
     }>;
-    _id: string;
   }>;
   elegablePersonSkills?: string[];
   mainHeading?: string;
@@ -79,7 +74,6 @@ export interface WorkshopData {
   previousWorkshopGlimpses?: Array<{
     imageUrl: string;
     description: string;
-    _id: string;
   }>;
   createdAt: string;
   updatedAt: string;
@@ -118,7 +112,6 @@ interface WorkshopState {
 // Initial state
 const initialState: WorkshopState = {
   currentWorkshop: {
-    _id: '',
     header: {
       title: '',
       description: '',
@@ -321,7 +314,6 @@ const workshopSlice = createSlice({
       if (state.currentWorkshop) {
         state.currentWorkshop.previousWorkshopGlimpses = action.payload.map(glimpse => ({
           ...glimpse,
-          _id: ''
         }));
       }
     },

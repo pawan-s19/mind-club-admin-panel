@@ -18,7 +18,6 @@ interface AboutWorkshopProps {
         workshopVisual?: Array<{
             name: string;
             imageOrVideo: { url: string };
-            _id: string;
         }>;
     }) => void;
     onFileUpload: (file: File) => Promise<string>;
@@ -93,8 +92,7 @@ export default function AboutWorkshop({ onDataChange, onFileUpload }: AboutWorks
     useEffect(() => {
         const visualData = workshopVisuals.map(visual => ({
             name: visual.name,
-            imageOrVideo: { url: visual.imageOrVideo },
-            _id: visual.id
+            imageOrVideo: { url: visual.imageOrVideo }
         }));
         onDataChange({ workshopVisual: visualData });
     }, [workshopVisuals, onDataChange]);

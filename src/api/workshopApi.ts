@@ -1,6 +1,7 @@
 const API_BASE_URL = 
-// "https://mind-club-backend.onrender.com/api" ||
- 'http://localhost:5000/api';
+"https://mind-club-backend.onrender.com/api"
+//  ||
+//  'http://localhost:5000/api';
 const WORKSHOP_API_URL = `${API_BASE_URL}/workshops`;
 
 import { fetchWithAuth } from './authApi';

@@ -8,8 +8,8 @@ interface WorkshopHeaderProps {
   onDataChange: (data: {
     title?: string;
     description?: string;
-    image?: string;
-    watchTrailer?: string;
+    image?: { url: string };
+    watchTrailer?: { url: string };
   }) => void;
   onFileUpload: (file: File) => Promise<string>;
 }
@@ -38,7 +38,7 @@ export default function WorkshopHeader({ onDataChange, onFileUpload }: WorkshopH
       try {
         const base64Data = await onFileUpload(file);
         setImageFile(base64Data);
-        onDataChange({ image: base64Data });
+        onDataChange({ image: { url: base64Data } });
       } catch (error) {
         console.error('Error uploading image:', error);
       }
@@ -51,7 +51,7 @@ export default function WorkshopHeader({ onDataChange, onFileUpload }: WorkshopH
       try {
         const base64Data = await onFileUpload(file);
         setTrailerFile(base64Data);
-        onDataChange({ watchTrailer: base64Data });
+        onDataChange({ watchTrailer: { url: base64Data } });
       } catch (error) {
         console.error('Error uploading trailer:', error);
       }
@@ -59,7 +59,7 @@ export default function WorkshopHeader({ onDataChange, onFileUpload }: WorkshopH
   }, [onFileUpload, onDataChange]);
 
   return (
-    <ComponentCard title="Workshop Header">
+    <ComponentCard title="Workshop Header (Section 1)">
       <div className="space-y-6">
         <div>
           <Label htmlFor="title">Title</Label>

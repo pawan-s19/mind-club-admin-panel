@@ -84,6 +84,26 @@ export interface WorkshopData {
   createdAt: string;
   updatedAt: string;
   __v: number;
+  subHeroHeading: string;
+  skills?: {
+    headingOfSection: string;
+    skills: string[];
+  };
+  mentor?: {
+    name: string;
+    description: string;
+    mentorName: string;
+    about: string;
+    mentorImage: {
+      url: string;
+      fileId?: string;
+    };
+  };
+  creator?: {
+    name: string;
+    description: string;
+    imageOrVideo: { url: string }[];
+  };
 }
 
 // Workshop state interface
@@ -135,7 +155,27 @@ const initialState: WorkshopState = {
     previousWorkshopGlimpses: [],
     createdAt: '',
     updatedAt: '',
-    __v: 0
+    __v: 0,
+    subHeroHeading: '',
+    skills: {
+      headingOfSection: '',
+      skills: [],
+    },
+    mentor: {
+      name: '',
+      description: '',
+      mentorName: '',
+      about: '',
+      mentorImage: {
+        url: '',
+        fileId: ''
+      }
+    },
+    creator: {
+      name: '',
+      description: '',
+      imageOrVideo: [],
+    }
   },
   workshops: [],
   loading: false,
@@ -285,6 +325,26 @@ const workshopSlice = createSlice({
         }));
       }
     },
+    updateSubHeroHeading: (state, action: PayloadAction<string>) => {
+      if (state.currentWorkshop) {
+        state.currentWorkshop.subHeroHeading = action.payload;
+      }
+    },
+    updateSkills: (state, action: PayloadAction<{ headingOfSection: string; skills: string[] }>) => {
+      if (state.currentWorkshop) {
+        state.currentWorkshop.skills = action.payload;
+      }
+    },
+    updateMentor: (state, action: PayloadAction<WorkshopData['mentor']>) => {
+      if (state.currentWorkshop) {
+        state.currentWorkshop.mentor = action.payload;
+      }
+    },
+    updateCreator: (state, action: PayloadAction<WorkshopData['creator']>) => {
+      if (state.currentWorkshop) {
+        state.currentWorkshop.creator = action.payload;
+      }
+    },
     // Reset current workshop to initial state
     resetCurrentWorkshop: (state) => {
       state.currentWorkshop = initialState.currentWorkshop;
@@ -398,6 +458,10 @@ export const {
   updatePriceBreakdown,
   updateReferenceMember,
   updatePreviousWorkshopGlimpses,
+  updateSubHeroHeading,
+  updateSkills,
+  updateMentor,
+  updateCreator,
   resetCurrentWorkshop,
   clearError,
   clearSuccess,

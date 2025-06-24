@@ -31,18 +31,20 @@ interface ItineraryDay {
 interface WorkshopItineraryProps {
     onDataChange: (data: Array<{
         day: number;
-        itineraryBanner: string;
+        itineraryBanner: { url: string };
         title: string;
         description: string;
         activities: Array<{
             time: string;
             activity: string;
             image: {
-                imageOrVideo: string;
+                imageOrVideo: { url: string };
                 description: string;
             };
             color: string;
+            _id: string;
         }>;
+        _id: string;
     }>) => void;
     onDatesChange: (startDate: string, endDate: string) => void;
     onFileUpload: (file: File) => Promise<string>;
@@ -256,21 +258,26 @@ export default function WorkshopItinerary({ onDataChange, onDatesChange, onFileU
     useEffect(() => {
         const itineraryData = itinerary.map(day => ({
             day: day.day,
-            itineraryBanner: day.itineraryBanner,
+            itineraryBanner: { url: day.itineraryBanner },
             title: day.title,
             description: day.description,
             activities: day.activities.map(activity => ({
                 time: activity.time,
                 activity: activity.activity,
-                image: activity.image,
-                color: activity.color
-            }))
+                image: {
+                    imageOrVideo: { url: activity.image.imageOrVideo },
+                    description: activity.image.description
+                },
+                color: activity.color,
+                _id: activity.id
+            })),
+            _id: day.id
         }));
         onDataChange(itineraryData);
     }, [itinerary, onDataChange]);
 
     return (
-        <ComponentCard title="Workshop Itinerary">
+        <ComponentCard title="Workshop Itinerary (Section 4)">
             <div className="space-y-6">
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                     <div>

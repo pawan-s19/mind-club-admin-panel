@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useWorkshop } from "../../hooks/useWorkshop";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import PageMeta from "../../components/common/PageMeta";
@@ -8,6 +8,18 @@ import LocationWorkshop from "../../components/form/form-elements/LocationWorksh
 import WorkshopHeader from "../../components/form/form-elements/WorkshopHeader";
 import WorkshopItinerary from "../../components/form/form-elements/WorkshopItinerary";
 import WorkshopType from "../../components/form/form-elements/WorkshopType";
+import WorkshopSubHeroPage from "../../components/form/form-elements/WorkshopSubHeroPage";
+import WorkshopSkillsRequired from "../../components/form/form-elements/WorkshopSkillsRequired";
+import WorkshopCreatorSection from "../../components/form/form-elements/WorkshopCreatorSection.tsx";
+import WorkshopMentor from "../../components/form/form-elements/WorkshopMentor";
+
+import type { MentorData } from "../../components/form/form-elements/WorkshopMentor";
+
+type Creator = {
+  name: string;
+  description: string;
+  imageOrVideo: { url: string }[];
+};
 
 // Utility function to convert file to base64
 const fileToBase64 = (file: File): Promise<string> => {
@@ -34,7 +46,11 @@ export default function WorkshopElement() {
     updateItinerary,
     updateDates,
     clearError,
-    clearSuccess
+    clearSuccess,
+    updateSubHeroHeading,
+    updateSkills,
+    updateMentor,
+    updateCreator,
   } = useWorkshop();
 
   // Function to handle file uploads and convert to base64
@@ -129,6 +145,16 @@ export default function WorkshopElement() {
             onDataChange={updateLocation}
             onFileUpload={handleFileUpload}
           />
+          <WorkshopSubHeroPage 
+            subHeroHeading={currentWorkshop?.subHeroHeading || ''}
+            onSubHeroHeadingChange={updateSubHeroHeading}
+          />
+          
+          <WorkshopSkillsRequired
+            skills={currentWorkshop?.skills || { headingOfSection: '', skills: [] }}
+            onSkillsChange={updateSkills}
+          />
+
         </div>
         <div className="space-y-6">
           <WorkshopType 
@@ -138,6 +164,19 @@ export default function WorkshopElement() {
             onDataChange={updateAbout}
             onFileUpload={handleFileUpload}
           />
+
+          <WorkshopCreatorSection
+            creator={currentWorkshop?.creator || { name: '', description: '', imageOrVideo: [] }}
+            onCreatorChange={updateCreator}
+            onFileUpload={handleFileUpload}
+          />
+          
+          <WorkshopMentor
+            mentor={currentWorkshop?.mentor || { name: '', description: '', mentorName: '', about: '', mentorImage: { url: '' } }}
+            onMentorChange={updateMentor}
+            onFileUpload={handleFileUpload}
+          />
+          
           <WorkshopItinerary 
             onDataChange={updateItinerary}
             onDatesChange={updateDates}

@@ -1,16 +1,17 @@
-const API_BASE_URL = "https://mind-club-backend.onrender.com/api" 
-// || 'http://localhost:5000/api';
+const API_BASE_URL = 
+// "https://mind-club-backend.onrender.com/api" ||
+ 'http://localhost:5000/api';
 const WORKSHOP_API_URL = `${API_BASE_URL}/workshops`;
+
+import { fetchWithAuth } from './authApi';
 
 // Workshop API functions
 export const createWorkshopApi = async (workshopData: any) => {
   try {
-    const token = localStorage.getItem('token');
-    const response = await fetch(WORKSHOP_API_URL, {
+    const response = await fetchWithAuth(WORKSHOP_API_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(workshopData)
     });
@@ -30,19 +31,11 @@ export const createWorkshopApi = async (workshopData: any) => {
 export const getWorkshopsApi = async () => {
   try {
     console.log(import.meta.env , "import.meta.env");
-    const token = localStorage.getItem('token');
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json'
-    };
-    
-    // Only add Authorization header if token exists
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
-    }
-    
-    const response = await fetch(WORKSHOP_API_URL, {
+    const response = await fetchWithAuth(WORKSHOP_API_URL, {
       method: 'GET',
-      headers
+      headers: {
+        'Content-Type': 'application/json',
+      }
     });
 
     if (!response.ok) {
@@ -60,12 +53,8 @@ export const getWorkshopsApi = async () => {
 
 export const getWorkshopByIdApi = async (id: string) => {
   try {
-    const token = localStorage.getItem('token');
-    const response = await fetch(`${WORKSHOP_API_URL}/${id}`, {
+    const response = await fetchWithAuth(`${WORKSHOP_API_URL}/${id}`, {
       method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
     });
 
     if (!response.ok) {
@@ -82,12 +71,10 @@ export const getWorkshopByIdApi = async (id: string) => {
 
 export const updateWorkshopApi = async (id: string, workshopData: any) => {
   try {
-    const token = localStorage.getItem('token');
-    const response = await fetch(`${WORKSHOP_API_URL}/${id}`, {
+    const response = await fetchWithAuth(`${WORKSHOP_API_URL}/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(workshopData)
     });
@@ -106,12 +93,8 @@ export const updateWorkshopApi = async (id: string, workshopData: any) => {
 
 export const deleteWorkshopApi = async (id: string) => {
   try {
-    const token = localStorage.getItem('token');
-    const response = await fetch(`${WORKSHOP_API_URL}/${id}`, {
+    const response = await fetchWithAuth(`${WORKSHOP_API_URL}/${id}`, {
       method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
     });
 
     if (!response.ok) {

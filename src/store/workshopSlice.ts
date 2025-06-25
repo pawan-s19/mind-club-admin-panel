@@ -9,10 +9,13 @@ import {
 
 // Workshop data structure interface matching the new API structure
 export interface WorkshopData {
+  _id?: string; // MongoDB ID from API response
   header: {
     title: string;
     description: string;
-    image: string; // base64 string
+    image: {
+      url: string; // base64 string or URL
+    };
     watchTrailer: string; // base64 string
   };
   brochure: string; // base64 string
@@ -85,7 +88,9 @@ const initialState: WorkshopState = {
     header: {
       title: '',
       description: '',
-      image: '',
+      image: {
+        url: ''
+      },
       watchTrailer: ''
     },
     brochure: '',
@@ -166,7 +171,7 @@ export const fetchWorkshopById = createAsyncThunk(
 
 export const updateWorkshop = createAsyncThunk(
   "workshop/updateWorkshop",
-  async ({ id, workshopData }: { id: string; workshopData: WorkshopData }, thunkAPI) => {
+  async ({ id, workshopData }: { id: string; workshopData: any }, thunkAPI) => {
     try {
       const data = await updateWorkshopApi(id, workshopData);
       return data;
@@ -321,11 +326,15 @@ const workshopSlice = createSlice({
       .addCase(updateWorkshop.fulfilled, (state, action) => {
         state.loading = false;
         state.success = "Workshop updated successfully!";
-        // Update the workshop in the list
-        const index = state.workshops.findIndex(w => w === action.payload);
-        if (index !== -1) {
-          state.workshops[index] = action.payload;
-        }
+        // Update the workshop in the list by _id
+        state.currentWorkshop = action.payload
+        // if (index !== -1) {
+        //   state.workshops[index] = action.payload;
+        // }
+        // // Optionally update currentWorkshop if it matches
+        // if (state.currentWorkshop && state.currentWorkshop._id === action.payload._id) {
+        //   state.currentWorkshop = action.payload;
+        // }
       })
       .addCase(updateWorkshop.rejected, (state, action) => {
         state.loading = false;

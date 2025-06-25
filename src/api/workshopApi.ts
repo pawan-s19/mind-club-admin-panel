@@ -1,7 +1,7 @@
 const API_BASE_URL = 
-"https://mind-club-backend-1.onrender.com/api"
+// "https://mind-club-backend-1.onrender.com/api"
 //  ||
-//  'http://localhost:5000/api';
+ 'http://localhost:5000/api';
 const WORKSHOP_API_URL = `${API_BASE_URL}/workshops`;
 
 import { fetchWithAuth } from './authApi';
@@ -72,10 +72,14 @@ export const getWorkshopByIdApi = async (id: string) => {
 
 export const updateWorkshopApi = async (id: string, workshopData: any) => {
   try {
+    debugger
+    // Prepare the body to match the curl structure
     const response = await fetchWithAuth(`${WORKSHOP_API_URL}/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
+        'origin': 'http://localhost:5173',
+        'referer': 'http://localhost:5173/',
       },
       body: JSON.stringify(workshopData)
     });

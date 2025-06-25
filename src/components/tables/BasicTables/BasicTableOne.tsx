@@ -8,6 +8,7 @@ import {
 
 import Badge from "../../ui/badge/Badge";
 import { WorkshopData } from "../../../store/workshopSlice";
+import { useNavigate } from "react-router-dom";
 
 interface BasicTableOneProps {
   workshops?: WorkshopData[];
@@ -15,6 +16,12 @@ interface BasicTableOneProps {
 }
 
 export default function BasicTableOne({ workshops = [], loading = false }: BasicTableOneProps) {
+  const navigate = useNavigate();
+
+  const handleWorkshopClick = (workshopId: string) => {
+    navigate(`/workshop/${workshopId}`);
+  };
+
   if (loading) {
     return (
       <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
@@ -124,12 +131,15 @@ export default function BasicTableOne({ workshops = [], loading = false }: Basic
                     <div>End: {new Date(workshop.endDate).toLocaleDateString()}</div>
                   </div>
                 </TableCell>
-                <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                <TableCell 
+                  className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50"
+                  onClick={() => workshop._id && handleWorkshopClick(workshop._id)}
+                >
                   <Badge
                     size="sm"
                     color="success"
                   >
-                    Active
+                    View
                   </Badge>
                 </TableCell>
               </TableRow>

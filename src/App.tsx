@@ -19,6 +19,7 @@ import Buttons from "./pages/UiElements/Buttons";
 import Images from "./pages/UiElements/Images";
 import Videos from "./pages/UiElements/Videos";
 import UserProfiles from "./pages/UserProfiles";
+import WorkshopPage from "./pages/WorkshopPage";
 
 
 export default function App() {
@@ -33,6 +34,7 @@ export default function App() {
 
             {/* Others Page */}
             <Route path="/profile" element={<UserProfiles />} />
+            <Route path="/workshop/:id" element={<WorkshopPage />} />
             <Route path="/calendar" element={<Calendar />} />
             <Route path="/blank" element={<Blank />} />
 

@@ -13,12 +13,10 @@ import WorkshopSkillsRequired from "../../components/form/form-elements/Workshop
 import WorkshopCreatorSection from "../../components/form/form-elements/WorkshopCreatorSection.tsx";
 import WorkshopMentor from "../../components/form/form-elements/WorkshopMentor";
 
-import type { MentorData } from "../../components/form/form-elements/WorkshopMentor";
-
 type Creator = {
   name: string;
   description: string;
-  imageOrVideo: { url: string }[];
+  imageOrVideo: string[];
 };
 
 // Utility function to convert file to base64
@@ -166,13 +164,13 @@ export default function WorkshopElement() {
           />
 
           <WorkshopCreatorSection
-            creator={currentWorkshop?.creator || { name: '', description: '', imageOrVideo: [] }}
+            creator={currentWorkshop?.creators || { name: '', description: '', imageOrVideo: [] }}
             onCreatorChange={updateCreator}
             onFileUpload={handleFileUpload}
           />
           
           <WorkshopMentor
-            mentor={currentWorkshop?.mentor || { name: '', description: '', mentorName: '', about: '', mentorImage: { url: '' } }}
+            mentor={currentWorkshop?.mentor || { name: '', description: '', mentorName: '', about: '', mentorImage: '' }}
             onMentorChange={updateMentor}
             onFileUpload={handleFileUpload}
           />

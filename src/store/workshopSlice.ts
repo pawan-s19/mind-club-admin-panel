@@ -7,30 +7,22 @@ import {
   deleteWorkshopApi 
 } from "../api/workshopApi";
 
-// Workshop data structure interface matching your API
+// Workshop data structure interface matching the new API structure
 export interface WorkshopData {
   header: {
     title: string;
     description: string;
-    image: {
-      url: string;
-    };
-    watchTrailer: {
-      url: string;
-    };
+    image: string; // base64 string
+    watchTrailer: string; // base64 string
   };
-  brochure: {
-    url: string;
-  };
+  brochure: string; // base64 string
   workshopType: 'online' | 'on field';
   about: {
     title: string;
     description: string;
     workshopVisual: Array<{
       name: string;
-      imageOrVideo: {
-        url: string;
-      };
+      imageOrVideo: string; // base64 string
     }>;
   };
   location: {
@@ -39,64 +31,42 @@ export interface WorkshopData {
     locationBlog: Array<{
       name: string;
       description: string;
-      imageOrVideo: {
-        url: string;
-      };
+      imageOrVideo: string; // base64 string
     }>;
   };
   startDate: string; // ISO date string
   endDate: string; // ISO date string
   itinerary: Array<{
     day: number;
-    itineraryBanner: {
-      url: string;
-    };
+    itineraryBanner: string; // base64 string
     title: string;
     description: string;
     activities: Array<{
       time: string;
       activity: string;
       image: {
-        imageOrVideo: {
-          url: string;
-        };
+        imageOrVideo: string; // base64 string
         description: string;
       };
       color: string;
     }>;
   }>;
-  elegablePersonSkills?: string[];
-  mainHeading?: string;
-  inclusions?: string[];
-  exclusions?: string[];
-  priceBreakdown?: string;
-  referenceMember?: string;
-  previousWorkshopGlimpses?: Array<{
-    imageUrl: string;
-    description: string;
-  }>;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
   subHeroHeading: string;
-  skills?: {
+  skills: {
     headingOfSection: string;
     skills: string[];
   };
-  mentor?: {
+  creators: {
+    name: string;
+    description: string;
+    imageOrVideo: string[]; // array of base64 strings
+  };
+  mentor: {
     name: string;
     description: string;
     mentorName: string;
     about: string;
-    mentorImage: {
-      url: string;
-      fileId?: string;
-    };
-  };
-  creator?: {
-    name: string;
-    description: string;
-    imageOrVideo: { url: string }[];
+    mentorImage: string; // base64 string
   };
 }
 
@@ -115,16 +85,10 @@ const initialState: WorkshopState = {
     header: {
       title: '',
       description: '',
-      image: {
-        url: ''
-      },
-      watchTrailer: {
-        url: ''
-      }
+      image: '',
+      watchTrailer: ''
     },
-    brochure: {
-      url: ''
-    },
+    brochure: '',
     workshopType: 'online',
     about: {
       title: '',
@@ -139,35 +103,22 @@ const initialState: WorkshopState = {
     startDate: new Date().toISOString(),
     endDate: new Date().toISOString(),
     itinerary: [],
-    elegablePersonSkills: [],
-    mainHeading: '',
-    inclusions: [],
-    exclusions: [],
-    priceBreakdown: '',
-    referenceMember: '',
-    previousWorkshopGlimpses: [],
-    createdAt: '',
-    updatedAt: '',
-    __v: 0,
     subHeroHeading: '',
     skills: {
       headingOfSection: '',
       skills: [],
+    },
+    creators: {
+      name: '',
+      description: '',
+      imageOrVideo: [],
     },
     mentor: {
       name: '',
       description: '',
       mentorName: '',
       about: '',
-      mentorImage: {
-        url: '',
-        fileId: ''
-      }
-    },
-    creator: {
-      name: '',
-      description: '',
-      imageOrVideo: [],
+      mentorImage: ''
     }
   },
   workshops: [],
@@ -250,7 +201,7 @@ const workshopSlice = createSlice({
     },
     updateBrochure: (state, action: PayloadAction<string>) => {
       if (state.currentWorkshop) {
-        state.currentWorkshop.brochure = { ...state.currentWorkshop.brochure, url: action.payload };
+        state.currentWorkshop.brochure = action.payload;
       }
     },
     updateWorkshopType: (state, action: PayloadAction<'online' | 'on field'>) => {
@@ -280,43 +231,6 @@ const workshopSlice = createSlice({
       }
     },
     // Additional fields
-    updateElegablePersonSkills: (state, action: PayloadAction<string[]>) => {
-      if (state.currentWorkshop) {
-        state.currentWorkshop.elegablePersonSkills = action.payload;
-      }
-    },
-    updateMainHeading: (state, action: PayloadAction<string>) => {
-      if (state.currentWorkshop) {
-        state.currentWorkshop.mainHeading = action.payload;
-      }
-    },
-    updateInclusions: (state, action: PayloadAction<string[]>) => {
-      if (state.currentWorkshop) {
-        state.currentWorkshop.inclusions = action.payload;
-      }
-    },
-    updateExclusions: (state, action: PayloadAction<string[]>) => {
-      if (state.currentWorkshop) {
-        state.currentWorkshop.exclusions = action.payload;
-      }
-    },
-    updatePriceBreakdown: (state, action: PayloadAction<string>) => {
-      if (state.currentWorkshop) {
-        state.currentWorkshop.priceBreakdown = action.payload;
-      }
-    },
-    updateReferenceMember: (state, action: PayloadAction<string>) => {
-      if (state.currentWorkshop) {
-        state.currentWorkshop.referenceMember = action.payload;
-      }
-    },
-    updatePreviousWorkshopGlimpses: (state, action: PayloadAction<Array<{ imageUrl: string; description: string }>>) => {
-      if (state.currentWorkshop) {
-        state.currentWorkshop.previousWorkshopGlimpses = action.payload.map(glimpse => ({
-          ...glimpse,
-        }));
-      }
-    },
     updateSubHeroHeading: (state, action: PayloadAction<string>) => {
       if (state.currentWorkshop) {
         state.currentWorkshop.subHeroHeading = action.payload;
@@ -332,9 +246,9 @@ const workshopSlice = createSlice({
         state.currentWorkshop.mentor = action.payload;
       }
     },
-    updateCreator: (state, action: PayloadAction<WorkshopData['creator']>) => {
+    updateCreator: (state, action: PayloadAction<WorkshopData['creators']>) => {
       if (state.currentWorkshop) {
-        state.currentWorkshop.creator = action.payload;
+        state.currentWorkshop.creators = action.payload;
       }
     },
     // Reset current workshop to initial state
@@ -379,6 +293,7 @@ const workshopSlice = createSlice({
       })
       .addCase(fetchWorkshops.fulfilled, (state, action) => {
         state.loading = false;
+        debugger;
         state.workshops = action.payload;
       })
       .addCase(fetchWorkshops.rejected, (state, action) => {
@@ -408,7 +323,7 @@ const workshopSlice = createSlice({
         state.loading = false;
         state.success = "Workshop updated successfully!";
         // Update the workshop in the list
-        const index = state.workshops.findIndex(w => w._id === action.payload._id);
+        const index = state.workshops.findIndex(w => w === action.payload);
         if (index !== -1) {
           state.workshops[index] = action.payload;
         }
@@ -426,7 +341,7 @@ const workshopSlice = createSlice({
         state.loading = false;
         state.success = "Workshop deleted successfully!";
         // Remove the workshop from the list
-        state.workshops = state.workshops.filter(w => w._id !== action.payload.id);
+        state.workshops = state.workshops.filter(w => w !== action.payload.data);
       })
       .addCase(deleteWorkshop.rejected, (state, action) => {
         state.loading = false;
@@ -443,13 +358,6 @@ export const {
   updateLocation,
   updateItinerary,
   updateDates,
-  updateElegablePersonSkills,
-  updateMainHeading,
-  updateInclusions,
-  updateExclusions,
-  updatePriceBreakdown,
-  updateReferenceMember,
-  updatePreviousWorkshopGlimpses,
   updateSubHeroHeading,
   updateSkills,
   updateMentor,

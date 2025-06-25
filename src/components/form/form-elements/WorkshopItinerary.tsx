@@ -31,14 +31,14 @@ interface ItineraryDay {
 interface WorkshopItineraryProps {
     onDataChange: (data: Array<{
         day: number;
-        itineraryBanner: { url: string };
+        itineraryBanner: string;
         title: string;
         description: string;
         activities: Array<{
             time: string;
             activity: string;
             image: {
-                imageOrVideo: { url: string };
+                imageOrVideo: string;
                 description: string;
             };
             color: string;
@@ -256,14 +256,14 @@ export default function WorkshopItinerary({ onDataChange, onDatesChange, onFileU
     useEffect(() => {
         const itineraryData = itinerary.map(day => ({
             day: day.day,
-            itineraryBanner: { url: day.itineraryBanner },
+            itineraryBanner: day.itineraryBanner,
             title: day.title,
             description: day.description,
             activities: day.activities.map(activity => ({
                 time: activity.time,
                 activity: activity.activity,
                 image: {
-                    imageOrVideo: { url: activity.image.imageOrVideo },
+                    imageOrVideo: activity.image.imageOrVideo,
                     description: activity.image.description
                 },
                 color: activity.color,

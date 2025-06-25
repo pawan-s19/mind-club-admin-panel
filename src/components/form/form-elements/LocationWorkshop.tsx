@@ -33,7 +33,7 @@ interface LocationWorkshopProps {
         locationBlog?: Array<{
             name: string;
             description: string;
-            imageOrVideo: { url: string };
+            imageOrVideo: string;
         }>;
     }) => void;
     onFileUpload: (file: File) => Promise<string>;
@@ -118,7 +118,7 @@ export default function LocationWorkshop({ onDataChange, onFileUpload }: Locatio
         const blogData = locationBlogs.map(blog => ({
             name: blog.name,
             description: blog.description,
-            imageOrVideo: { url: blog.imageOrVideo },
+            imageOrVideo: blog.imageOrVideo,
         }));
         onDataChange({ locationBlog: blogData });
     }, [locationBlogs, onDataChange]);

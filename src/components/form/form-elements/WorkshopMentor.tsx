@@ -4,17 +4,12 @@ import FileInput from "../input/FileInput";
 import Input from "../input/InputField";
 import Label from "../Label";
 
-interface MentorImage {
-  url: string;
-  fileId?: string;
-}
-
 export interface MentorData {
   name: string;
   description: string;
   mentorName: string;
   about: string;
-  mentorImage: MentorImage;
+  mentorImage: string;
 }
 
 interface WorkshopMentorProps {
@@ -24,7 +19,7 @@ interface WorkshopMentorProps {
 }
 
 export default function WorkshopMentor({ mentor, onMentorChange, onFileUpload }: WorkshopMentorProps) {
-  const [mentorImage, setMentorImage] = useState<string>(mentor.mentorImage?.url || "");
+  const [mentorImage, setMentorImage] = useState<string>(mentor.mentorImage || "");
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -43,7 +38,7 @@ export default function WorkshopMentor({ mentor, onMentorChange, onFileUpload }:
           setMentorImage(base64Data);
           onMentorChange({
             ...mentor,
-            mentorImage: { url: base64Data },
+            mentorImage: base64Data,
           });
         } catch (error) {
           console.error("Error uploading mentor image:", error);

@@ -8,7 +8,7 @@ import Label from "../Label";
 interface Creator {
     name: string;
     description: string;
-    imageOrVideo: { url: string }[];
+    imageOrVideo: string[];
 }
 
 interface WorkshopCreatorSectionProps {
@@ -35,28 +35,18 @@ export default function WorkshopCreatorSection({
     // Ensure at least one input in Redux state
     useEffect(() => {
         if (!creator.imageOrVideo || creator.imageOrVideo.length === 0) {
-            onCreatorChange({ ...creator, imageOrVideo: [{ url: '' }] });
+            onCreatorChange({ ...creator, imageOrVideo: [''] });
         }
     }, [creator, onCreatorChange]);
-
-    // Utility to convert file to base64
-    const fileToBase64 = (file: File): Promise<string> => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result as string);
-            reader.onerror = error => reject(error);
-        });
-    };
 
     // Handle file change for a specific input
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>, idx: number) => {
         const file = event.target.files?.[0];
         if (file) {
             try {
-                const base64 = await fileToBase64(file);
+                const base64 = await onFileUpload(file);
                 const updated = safeCreator.imageOrVideo.map((item, i) =>
-                    i === idx ? { url: base64 } : item
+                    i === idx ? base64 : item
                 );
                 safeOnCreatorChange({
                     ...safeCreator,
@@ -72,7 +62,7 @@ export default function WorkshopCreatorSection({
     const handleAddMore = () => {
         safeOnCreatorChange({
             ...safeCreator,
-            imageOrVideo: [...safeCreator.imageOrVideo, { url: '' }],
+            imageOrVideo: [...safeCreator.imageOrVideo, ''],
         });
     };
 
@@ -97,7 +87,6 @@ export default function WorkshopCreatorSection({
                 <div>
                     <Label htmlFor="creator-description">Description</Label>
                     <TextArea
-                        id="creator-description"
                         placeholder="Description"
                         value={safeCreator.description}
                         onChange={value => safeOnCreatorChange({ ...safeCreator, description: value })}
@@ -112,7 +101,7 @@ export default function WorkshopCreatorSection({
                                     onChange={e => handleFileChange(e, idx)}
                                     className="custom-class"
                                 />
-                                {file.url && (
+                                {file && (
                                     <span className="text-green-600 text-xs">Selected</span>
                                 )}
                                 {safeCreator.imageOrVideo.length > 1 && (

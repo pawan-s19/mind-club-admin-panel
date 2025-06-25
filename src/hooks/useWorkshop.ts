@@ -18,8 +18,6 @@ import {
   updateWorkshop,
   updateWorkshopType,
   WorkshopData,
-  updateReferenceMember,
-  updatePreviousWorkshopGlimpses,
   updateSubHeroHeading,
   updateSkills,
   updateMentor,
@@ -56,11 +54,9 @@ export const useWorkshop = () => {
     fetchWorkshopById: useCallback((id: string) => dispatch(fetchWorkshopById(id)), [dispatch]),
     updateWorkshop: useCallback((id: string, data: WorkshopData) => dispatch(updateWorkshop({ id, workshopData: data })), [dispatch]),
     deleteWorkshop: useCallback((id: string) => dispatch(deleteWorkshop(id)), [dispatch]),
-    updateReferenceMember: useCallback((data: string) => dispatch(updateReferenceMember(data)), [dispatch]),
-    updatePreviousWorkshopGlimpses: useCallback((data: Array<{ imageUrl: string; description: string }>) => dispatch(updatePreviousWorkshopGlimpses(data)), [dispatch]),
     updateSubHeroHeading: useCallback((heading: string) => dispatch(updateSubHeroHeading(heading)), [dispatch]),
     updateSkills: useCallback((skills: { headingOfSection: string; skills: string[] }) => dispatch(updateSkills(skills)), [dispatch]),
     updateMentor: useCallback((mentor: WorkshopData['mentor']) => dispatch(updateMentor(mentor)), [dispatch]),
-    updateCreator: useCallback((creator: WorkshopData['creator']) => dispatch(updateCreator(creator)), [dispatch]),
+    updateCreator: useCallback((creator: WorkshopData['creators']) => dispatch(updateCreator(creator)), [dispatch]),
   };
 }; 

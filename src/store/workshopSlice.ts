@@ -293,7 +293,6 @@ const workshopSlice = createSlice({
       })
       .addCase(fetchWorkshops.fulfilled, (state, action) => {
         state.loading = false;
-        debugger;
         state.workshops = action.payload;
       })
       .addCase(fetchWorkshops.rejected, (state, action) => {

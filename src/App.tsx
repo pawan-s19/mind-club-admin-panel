@@ -10,8 +10,10 @@ import BarChart from "./pages/Charts/BarChart";
 import LineChart from "./pages/Charts/LineChart";
 import Home from "./pages/Dashboard/Home";
 import WorkshopElement from "./pages/Forms/WorkShopElement";
+import LandingElement from "./pages/Forms/LandingElement";
 import NotFound from "./pages/OtherPage/NotFound";
 import WorkshopTables from "./pages/Tables/WorkshopTables";
+import LandingTables from "./pages/Tables/LandingTables";
 import Alerts from "./pages/UiElements/Alerts";
 import Avatars from "./pages/UiElements/Avatars";
 import Badges from "./pages/UiElements/Badges";
@@ -20,6 +22,7 @@ import Images from "./pages/UiElements/Images";
 import Videos from "./pages/UiElements/Videos";
 import UserProfiles from "./pages/UserProfiles";
 import WorkshopPage from "./pages/WorkshopPage";
+import LandingPage from "./pages/LandingPage";
 
 
 export default function App() {
@@ -35,16 +38,19 @@ export default function App() {
             {/* Others Page */}
             <Route path="/profile" element={<UserProfiles />} />
             <Route path="/workshop/:id" element={<WorkshopPage />} />
+            <Route path="/landing/:id" element={<LandingPage />} />
             <Route path="/calendar" element={<Calendar />} />
             <Route path="/blank" element={<Blank />} />
 
             {/* Forms */}
             <Route path="/workshop-create" element={<WorkshopElement />} />
+            {/* <Route path="/landing-management" element={<LandingElement />} /> */}
             {/* <Route path="/workshop-list" element={<FormElements />} /> */}
             {/* <Route path="/workshop-edit" element={<FormElements />} /> */}
 
             {/* Tables */}
             <Route path="/workshop-tables" element={<WorkshopTables />} />
+            <Route path="/landing-tables" element={<LandingTables />} />
 
             {/* Ui Elements */}
             <Route path="/alerts" element={<Alerts />} />

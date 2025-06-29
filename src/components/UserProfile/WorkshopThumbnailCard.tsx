@@ -3,41 +3,34 @@ import { Modal } from "../ui/modal";
 import Button from "../ui/button/Button";
 import Input from "../form/input/InputField";
 import Label from "../form/Label";
-import TextArea from "../form/input/TextArea";
 import FileInput from "../form/input/FileInput";
 import { useState, ChangeEvent, FormEvent } from "react";
 import { useDispatch } from "react-redux";
-import { updateWorkshop, updateWorkshopHeader } from "../../store/workshopSlice";
+import { updateWorkshop } from "../../store/workshopSlice";
 import { AppDispatch } from "../../store/store";
-import { updateWorkshopHeaderApi } from "../../api/workshopApi";
 
-interface WorkshopBrochureCardProps {
-  brochure: any; // Replace 'any' with your actual header type if available
+interface WorkshopThumbnailCardProps {
+  thumbnail: string;
   workshopId: string;
 }
 
-export default function WorkshopBrochureCard({ brochure, workshopId }: WorkshopBrochureCardProps) {
+export default function WorkshopThumbnailCard({ thumbnail, workshopId }: WorkshopThumbnailCardProps) {
   const { isOpen, openModal, closeModal } = useModal();
 
   // State for form fields
   const [form, setForm] = useState({
-    url: brochure?.url
+    thumbnail: thumbnail || "",
   });
 
   const dispatch = useDispatch<AppDispatch>();
 
-  // Handle input changes
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  // Handle file input (for image and watchTrailer)
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>, field: string) => {
+  // Handle file input for thumbnail
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
     reader.onloadend = () => {
-      setForm((prev) => ({ ...prev, [field]: reader.result as string }));
+      setForm({ thumbnail: reader.result as string });
     };
     reader.readAsDataURL(file);
   };
@@ -48,7 +41,7 @@ export default function WorkshopBrochureCard({ brochure, workshopId }: WorkshopB
     try {
       await dispatch(updateWorkshop({
         id: workshopId,
-        workshopData: {brochure : form},
+        workshopData: { thumbnail: form.thumbnail },
       })).unwrap();
       closeModal();
     } catch (err) {
@@ -59,26 +52,27 @@ export default function WorkshopBrochureCard({ brochure, workshopId }: WorkshopB
   return (
     <>
       <div className="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
+        <h4 className="mb-2 text-lg font-semibold text-center text-gray-800 dark:text-white/90 xl:text-left">
+          Workshop Thumbnail
+        </h4>
         <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
           <div className="flex flex-col items-center w-full gap-6 xl:flex-row">
-            <button className="flex w-full items-center justify-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200 lg:inline-flex lg:w-auto">
-              {brochure?.url && (
-                brochure?.url.match(/\.(jpeg|jpg|gif|png|svg)$/i) ? (
-                  <img src={brochure?.url} alt="Brochure" className="object-cover w-full h-full" />
-                ) : (
-                  <a
-                    href={brochure?.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500 underline"
-                  >
-                    View Brochure
-                  </a>
-                )
+            <div className="order-3 xl:order-2">
+              {thumbnail ? (
+                <div className="w-32 h-32 mx-auto xl:mx-0">
+                  <img
+                    src={thumbnail?.url}
+                    alt="Workshop Thumbnail"
+                    className="w-full h-full object-cover rounded-lg"
+                  />
+                </div>
+              ) : (
+                <div className="w-32 h-32 mx-auto xl:mx-0 bg-gray-200 rounded-lg flex items-center justify-center dark:bg-gray-700">
+                  <span className="text-gray-500 dark:text-gray-400 text-sm">No thumbnail</span>
+                </div>
               )}
-            </button>
+            </div>
           </div>
-
           <button
             onClick={openModal}
             className="flex w-full items-center justify-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200 lg:inline-flex lg:w-auto"
@@ -102,37 +96,60 @@ export default function WorkshopBrochureCard({ brochure, workshopId }: WorkshopB
           </button>
         </div>
       </div>
-      <Modal isOpen={isOpen} onClose={closeModal} className="max-w-[700px] m-4">
-        <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
+
+      <Modal isOpen={isOpen} onClose={closeModal} className="max-w-[500px] m-4">
+        <div className="no-scrollbar relative w-full max-w-[500px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
           <div className="px-2 pr-14">
             <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
-              Edit Header
+              Edit Workshop Thumbnail
             </h4>
             <p className="mb-6 text-sm text-gray-500 dark:text-gray-400 lg:mb-7">
-              Update your details to keep your brochure up-to-date.
+              Update your workshop thumbnail image.
             </p>
           </div>
           <form className="flex flex-col">
-            <div className="custom-scrollbar h-[450px] overflow-y-auto px-2 pb-3">
+            <div className="custom-scrollbar h-[300px] overflow-y-auto px-2 pb-3">
               <div>
-                {/* <h5 className="mb-5 text-lg font-medium text-gray-800 dark:text-white/90 lg:mb-6">
-                  Workshop Section (Section 1)
-                </h5> */}
+                <h5 className="mb-5 text-lg font-medium text-gray-800 dark:text-white/90 lg:mb-6">
+                  Workshop Thumbnail
+                </h5>
 
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-4">
                   <div>
-                    <Label>brochure</Label>
-                    <FileInput onChange={e => handleFileChange(e, "url")} />
+                    <Label>Current Thumbnail</Label>
+                    {form.thumbnail ? (
+                      <div className="mt-2 w-32 h-32">
+                        <img
+                          src={form.thumbnail}
+                          alt="Current Thumbnail"
+                          className="w-full h-full object-cover rounded-lg"
+                        />
+                      </div>
+                    ) : (
+                      <div className="mt-2 w-32 h-32 bg-gray-200 rounded-lg flex items-center justify-center dark:bg-gray-700">
+                        <span className="text-gray-500 dark:text-gray-400 text-sm">No thumbnail</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div>
+                    <Label>Upload New Thumbnail</Label>
+                    <FileInput
+                      onChange={handleFileChange}
+                      className="mt-2"
+                    />
+                    <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                      Recommended size: 400x400 pixels, Max size: 5MB
+                    </p>
                   </div>
                 </div>
               </div>
-
             </div>
             <div className="flex items-center gap-3 px-2 mt-6 lg:justify-end">
               <Button size="sm" variant="outline" onClick={closeModal}>
                 Close
               </Button>
-              <Button size="sm" onClick={e => handleSave(e as unknown as FormEvent)}>
+              <Button size="sm" onClick={(e) => handleSave(e)}>
                 Save Changes
               </Button>
             </div>
@@ -141,4 +158,4 @@ export default function WorkshopBrochureCard({ brochure, workshopId }: WorkshopB
       </Modal>
     </>
   );
-}
+} 

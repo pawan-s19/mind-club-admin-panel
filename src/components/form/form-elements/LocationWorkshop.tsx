@@ -127,7 +127,7 @@ export default function LocationWorkshop({ onDataChange, onFileUpload }: Locatio
         <ComponentCard title="Workshop Location (Section 3)">
             <div className="space-y-6">
                 <div>
-                    <Label htmlFor="name">Name</Label>
+                    <Label htmlFor="name">Location Name</Label>
                     <Input 
                         type="text" 
                         id="name" 
@@ -136,7 +136,7 @@ export default function LocationWorkshop({ onDataChange, onFileUpload }: Locatio
                     />
                 </div>
                 <div>
-                    <Label htmlFor="description">Description</Label>
+                    <Label htmlFor="description">Location Description</Label>
                     <TextArea 
                         placeholder="Description"
                         value={description}
@@ -145,19 +145,19 @@ export default function LocationWorkshop({ onDataChange, onFileUpload }: Locatio
                 </div>
                 <div>
                     <div className="flex items-center justify-between">
-                        <Label>Location Blog</Label>
+                        <Label>Location Visual</Label>
                         <button
                             type="button"
                             onClick={addLocationBlog}
                             className="flex items-center gap-2 text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
                         >
                             <PlusIcon className="w-4 h-4 text-white fill-current" />
-                            Add More Location Blog
+                            Add More visual
                         </button>
                     </div>
                     <div className="space-y-4">
                         {locationBlogs.map((blog, index) => (
-                            <ComponentCard key={blog.id} title={`Location Blog ${index + 1}`}>
+                            <ComponentCard key={blog.id} title={`Location visual ${index + 1}`}>
                                 <div className="space-y-4">
                                     <div className="flex items-center justify-between">
                                         <Label>Name</Label>

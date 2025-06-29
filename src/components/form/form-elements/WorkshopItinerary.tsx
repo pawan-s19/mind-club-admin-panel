@@ -6,44 +6,33 @@ import Input from "../input/InputField";
 import Label from "../Label";
 import TextArea from "../input/TextArea";
 import DatePicker from "../date-picker.tsx";
-import CustomTimePicker from "../CustomTimePicker";
 
 interface Activity {
     id: string;
-    time: string;
-    activity: string;
-    image: {
         imageOrVideo: string;
         description: string;
-    };
-    color: string;
 }
 
 interface ItineraryDay {
     id: string;
     day: number;
-    itineraryBanner: string;
     title: string;
-    description: string;
     activities: Activity[];
 }
 
 interface WorkshopItineraryProps {
-    onDataChange: (data: Array<{
-        day: number;
-        itineraryBanner: string;
+    onDataChange: (data: {
         title: string;
         description: string;
+        itineraryDays: Array<{
+            day: number;
+            title: string;
         activities: Array<{
-            time: string;
-            activity: string;
-            image: {
                 imageOrVideo: string;
                 description: string;
-            };
-            color: string;
+            }>;
         }>;
-    }>) => void;
+    }) => void;
     onDatesChange: (startDate: string, endDate: string) => void;
     onFileUpload: (file: File) => Promise<string>;
 }
@@ -51,7 +40,9 @@ interface WorkshopItineraryProps {
 export default function WorkshopItinerary({ onDataChange, onDatesChange, onFileUpload }: WorkshopItineraryProps) {
     const [startDate, setStartDate] = useState<Date | null>(null);
     const [endDate, setEndDate] = useState<Date | null>(null);
-    const [itinerary, setItinerary] = useState<ItineraryDay[]>([]);
+    const [itineraryTitle, setItineraryTitle] = useState<string>('');
+    const [itineraryDescription, setItineraryDescription] = useState<string>('');
+    const [itineraryDays, setItineraryDays] = useState<ItineraryDay[]>([]);
 
     // Calculate number of days between start and end date
     const calculateDays = (start: Date, end: Date): number => {
@@ -69,19 +60,12 @@ export default function WorkshopItinerary({ onDataChange, onDatesChange, onFileU
             days.push({
                 id: `day_${i}`,
                 day: i,
-                itineraryBanner: "",
                 title: "",
-                description: "",
                 activities: [
                     {
                         id: `activity_${i}_1`,
-                        time: "",
-                        activity: "",
-                        image: {
                             imageOrVideo: "",
                             description: ""
-                        },
-                        color: "#3B82F6"
                     }
                 ]
             });
@@ -102,8 +86,8 @@ export default function WorkshopItinerary({ onDataChange, onDatesChange, onFileU
             }
             
             if (endDate) {
-                const newItinerary = generateItineraryDays(newStartDate, endDate);
-                setItinerary(newItinerary);
+                const newItineraryDays = generateItineraryDays(newStartDate, endDate);
+                setItineraryDays(newItineraryDays);
                 onDatesChange(newStartDate.toISOString(), endDate.toISOString());
             }
         }
@@ -121,28 +105,9 @@ export default function WorkshopItinerary({ onDataChange, onDatesChange, onFileU
             }
             
             if (startDate) {
-                const newItinerary = generateItineraryDays(startDate, newEndDate);
-                setItinerary(newItinerary);
+                const newItineraryDays = generateItineraryDays(startDate, newEndDate);
+                setItineraryDays(newItineraryDays);
                 onDatesChange(startDate.toISOString(), newEndDate.toISOString());
-            }
-        }
-    };
-
-    const handleBannerChange = async (event: React.ChangeEvent<HTMLInputElement>, dayId: string) => {
-        const file = event.target.files?.[0];
-        if (file) {
-            try {
-                const base64Data = await onFileUpload(file);
-                setItinerary(prev => prev.map(day => 
-                    day.id === dayId 
-                        ? {
-                            ...day,
-                            itineraryBanner: base64Data
-                        }
-                        : day
-                ));
-            } catch (error) {
-                console.error('Error uploading banner:', error);
             }
         }
     };
@@ -152,7 +117,7 @@ export default function WorkshopItinerary({ onDataChange, onDatesChange, onFileU
         if (file) {
             try {
                 const base64Data = await onFileUpload(file);
-                setItinerary(prev => prev.map(day => 
+                setItineraryDays(prev => prev.map(day => 
                     day.id === dayId 
                         ? {
                             ...day,
@@ -160,10 +125,7 @@ export default function WorkshopItinerary({ onDataChange, onDatesChange, onFileU
                                 activity.id === activityId
                                     ? {
                                         ...activity,
-                                        image: {
-                                            ...activity.image,
                                             imageOrVideo: base64Data
-                                        }
                                     }
                                     : activity
                             )
@@ -177,7 +139,7 @@ export default function WorkshopItinerary({ onDataChange, onDatesChange, onFileU
     };
 
     const handleDayChange = (dayId: string, field: keyof ItineraryDay, value: string | number) => {
-        setItinerary(prev => prev.map(day => 
+        setItineraryDays(prev => prev.map(day => 
             day.id === dayId 
                 ? { ...day, [field]: value }
                 : day
@@ -185,7 +147,7 @@ export default function WorkshopItinerary({ onDataChange, onDatesChange, onFileU
     };
 
     const handleActivityChange = (dayId: string, activityId: string, field: keyof Activity, value: string) => {
-        setItinerary(prev => prev.map(day => 
+        setItineraryDays(prev => prev.map(day => 
             day.id === dayId 
                 ? {
                     ...day,
@@ -199,39 +161,13 @@ export default function WorkshopItinerary({ onDataChange, onDatesChange, onFileU
         ));
     };
 
-    const handleActivityImageDescriptionChange = (dayId: string, activityId: string, value: string) => {
-        setItinerary(prev => prev.map(day => 
-            day.id === dayId 
-                ? {
-                    ...day,
-                    activities: day.activities.map(activity =>
-                        activity.id === activityId
-                            ? {
-                                ...activity,
-                                image: {
-                                    ...activity.image,
-                                    description: value
-                                }
-                            }
-                            : activity
-                    )
-                }
-                : day
-        ));
-    };
-
     const addActivity = (dayId: string) => {
         const newActivity: Activity = {
             id: `activity_${Date.now()}`,
-            time: "",
-            activity: "",
-            image: {
                 imageOrVideo: "",
                 description: ""
-            },
-            color: "#3B82F6"
         };
-        setItinerary(prev => prev.map(day => 
+        setItineraryDays(prev => prev.map(day => 
             day.id === dayId 
                 ? {
                     ...day,
@@ -242,7 +178,7 @@ export default function WorkshopItinerary({ onDataChange, onDatesChange, onFileU
     };
 
     const removeActivity = (dayId: string, activityId: string) => {
-        setItinerary(prev => prev.map(day => 
+        setItineraryDays(prev => prev.map(day => 
             day.id === dayId 
                 ? {
                     ...day,
@@ -254,27 +190,47 @@ export default function WorkshopItinerary({ onDataChange, onDatesChange, onFileU
 
     // Update parent component when itinerary changes
     useEffect(() => {
-        const itineraryData = itinerary.map(day => ({
+        const itineraryData = {
+            title: itineraryTitle,
+            description: itineraryDescription,
+            itineraryDays: itineraryDays.map(day => ({
             day: day.day,
-            itineraryBanner: day.itineraryBanner,
             title: day.title,
-            description: day.description,
             activities: day.activities.map(activity => ({
-                time: activity.time,
-                activity: activity.activity,
-                image: {
-                    imageOrVideo: activity.image.imageOrVideo,
-                    description: activity.image.description
-                },
-                color: activity.color,
+                    imageOrVideo: activity.imageOrVideo,
+                    description: activity.description
+                })),
             })),
-        }));
+        };
         onDataChange(itineraryData);
-    }, [itinerary, onDataChange]);
+    }, [itineraryDays, itineraryTitle, itineraryDescription, onDataChange]);
 
     return (
-        <ComponentCard title="Workshop Itinerary (Section 4)">
+        <ComponentCard title="Workshop Overview (Section 4)">
             <div className="space-y-6">
+                {/* Itinerary Title and Description */}
+                <div className="space-y-4">
+                    <div>
+                        <Label>Overview Title</Label>
+                        <Input 
+                            type="text" 
+                            placeholder="Enter Overview title"
+                            value={itineraryTitle}
+                            onChange={(e) => setItineraryTitle(e.target.value)}
+                        />
+                    </div>
+                    
+                    <div>
+                        <Label>Workshop Overview Description</Label>
+                        <TextArea 
+                            placeholder="Enter Overview description"
+                            value={itineraryDescription}
+                            onChange={(value) => setItineraryDescription(value)}
+                            rows={3}
+                        />
+                    </div>
+                </div>
+
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                     <div>
                         <DatePicker
@@ -305,38 +261,19 @@ export default function WorkshopItinerary({ onDataChange, onDatesChange, onFileU
                     </div>
                 )}
                 
-                {itinerary.length > 0 && (
+                {itineraryDays.length > 0 && (
                     <div>
-                        <Label>Itinerary Days ({itinerary.length} days)</Label>
+                        <Label>Workshop Overview Days ({itineraryDays.length} days)</Label>
                         
                         <div className="space-y-4 mt-4">
-                            {itinerary.map((day) => (
+                            {itineraryDays.map((day) => (
                                 <ComponentCard key={day.id} title={`Day ${day.day}`}>
                                     <div className="space-y-4">
-                                        <div>
-                                            <Label>Itinerary Banner</Label>
-                                            <FileInput 
-                                                onChange={(e) => handleBannerChange(e, day.id)} 
-                                                className="custom-class" 
-                                            />
-                                            {day.itineraryBanner && (
-                                                <div className="mt-2 text-sm text-green-600">
-                                                    Banner uploaded successfully
-                                                </div>
-                                            )}
-                                        </div>
-                                        
                                         <Input 
                                             type="text" 
                                             placeholder="Day title"
                                             value={day.title}
                                             onChange={(e) => handleDayChange(day.id, 'title', e.target.value)}
-                                        />
-                                        
-                                        <TextArea 
-                                            placeholder="Day description"
-                                            value={day.description}
-                                            onChange={(value) => handleDayChange(day.id, 'description', value)}
                                         />
                                         
                                         <div>
@@ -368,59 +305,28 @@ export default function WorkshopItinerary({ onDataChange, onDatesChange, onFileU
                                                             )}
                                                         </div>
                                                         
-                                                        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                                                        <div className="space-y-3">
                                                             <div>
-                                                                <Label>Time</Label>
-                                                                <CustomTimePicker
-                                                                    value={activity.time}
-                                                                    onChange={(value) => handleActivityChange(day.id, activity.id, 'time', value)}
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                        <div className="mt-3">
-                                                            <Input 
-                                                                type="text" 
-                                                                placeholder="Activity description"
-                                                                value={activity.activity}
-                                                                onChange={(e) => handleActivityChange(day.id, activity.id, 'activity', e.target.value)}
-                                                            />
-                                                            </div>
-                                                        
-                                                        <div className="mt-3">
                                                             <Label>Activity Image/Video</Label>
                                                             <FileInput 
                                                                 onChange={(e) => handleActivityImageChange(e, day.id, activity.id)} 
                                                                 className="custom-class" 
                                                             />
-                                                            {activity.image.imageOrVideo && (
+                                                                {activity.imageOrVideo && (
                                                                 <div className="mt-2 text-sm text-green-600">
                                                                     File uploaded successfully
                                                                 </div>
                                                             )}
                                                         </div>
                                                         
-                                                        <div className="mt-3">
-                                                            <Label>Image Description</Label>
+                                                            <div>
+                                                                <Label>Activity Description</Label>
                                                             <TextArea 
-                                                                placeholder="Image description"
-                                                                value={activity.image.description}
-                                                                onChange={(value) => handleActivityImageDescriptionChange(day.id, activity.id, value)}
-                                                            />
-                                                        </div>
-                                                        
-                                                        <div className="mt-3">
-                                                            <Label>Color</Label>
-                                                            <div className="flex items-center gap-3">
-                                                                <input
-                                                                    type="color"
-                                                                    value={activity.color}
-                                                                    onChange={(e) => handleActivityChange(day.id, activity.id, 'color', e.target.value)}
-                                                                    className="w-12 h-10 rounded-lg border border-gray-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600"
-                                                                    title="Choose activity color"
+                                                                    placeholder="Activity description"
+                                                                    value={activity.description}
+                                                                    onChange={(value) => handleActivityChange(day.id, activity.id, 'description', value)}
+                                                                    rows={3}
                                                                 />
-                                                                <span className="text-sm text-gray-600 dark:text-gray-400">
-                                                                    {activity.color}
-                                                                </span>
                                                             </div>
                                                         </div>
                                                     </div>

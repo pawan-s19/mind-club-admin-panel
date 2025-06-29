@@ -101,7 +101,7 @@ export default function AboutWorkshop({ onDataChange, onFileUpload }: AboutWorks
         <ComponentCard title="About Workshop (Section 2)">
             <div className="space-y-6">
                 <div>
-                    <Label htmlFor="title">Title</Label>
+                    <Label htmlFor="title">Section 2 Title</Label>
                     <Input 
                         type="text" 
                         id="title" 
@@ -110,7 +110,7 @@ export default function AboutWorkshop({ onDataChange, onFileUpload }: AboutWorks
                     />
                 </div>
                 <div>
-                    <Label htmlFor="description">Description</Label>
+                    <Label htmlFor="description">Section 2 Description</Label>
                     <Input 
                         type="text" 
                         id="description" 
@@ -121,7 +121,7 @@ export default function AboutWorkshop({ onDataChange, onFileUpload }: AboutWorks
                 </div>
                 <div>
                     <div className="flex items-center justify-between">
-                        <Label>Workshop Visuals</Label>
+                        <Label>Section 2 Workshop Visuals</Label>
                         <button
                             type="button"
                             onClick={addWorkshopVisual}

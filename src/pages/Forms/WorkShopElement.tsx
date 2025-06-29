@@ -8,6 +8,8 @@ import LocationWorkshop from "../../components/form/form-elements/LocationWorksh
 import WorkshopHeader from "../../components/form/form-elements/WorkshopHeader";
 import WorkshopItinerary from "../../components/form/form-elements/WorkshopItinerary";
 import WorkshopType from "../../components/form/form-elements/WorkshopType";
+import WorkshopCategory from "../../components/form/form-elements/WorkshopCategory";
+import WorkshopThumbnail from "../../components/form/form-elements/WorkshopThumbnail";
 import WorkshopSubHeroPage from "../../components/form/form-elements/WorkshopSubHeroPage";
 import WorkshopSkillsRequired from "../../components/form/form-elements/WorkshopSkillsRequired";
 import WorkshopCreatorSection from "../../components/form/form-elements/WorkshopCreatorSection.tsx";
@@ -39,6 +41,8 @@ export default function WorkshopElement() {
     updateHeader,
     updateBrochure,
     updateWorkshopType,
+    updateCategory,
+    updateThumbnail,
     updateAbout,
     updateLocation,
     updateItinerary,
@@ -73,10 +77,10 @@ export default function WorkshopElement() {
       console.log('=== WORKSHOP FORM DATA ===');
       console.log('Complete Workshop Data Structure:');
       console.log(JSON.stringify(currentWorkshop, null, 2));
-      
+
       // Create the workshop
       await createWorkshop(currentWorkshop);
-      
+
       console.log('Workshop created successfully!');
     } catch (error) {
       console.error('Error creating workshop:', error);
@@ -102,65 +106,80 @@ export default function WorkshopElement() {
         description="This is React.js Form Elements  Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
       />
       <PageBreadcrumb pageTitle="Workshop Create" />
-      
+
       {/* Status Messages */}
       {error && (
         <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
           {error}
         </div>
       )}
-      
+
       {success && (
         <div className="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
           {success}
         </div>
       )}
-      
+
       {/* Submit Button */}
       <div className="mb-6">
         <button
           onClick={handleSubmit}
           disabled={loading}
-          className={`bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ${
-            loading ? 'opacity-50 cursor-not-allowed' : ''
-          }`}
+          className={`bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ${loading ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
         >
           {loading ? 'Creating Workshop...' : 'Submit Workshop Data'}
         </button>
       </div>
-      
+
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
         <div className="space-y-6">
-          <WorkshopHeader 
-            onDataChange={updateHeader}
+          <WorkshopHeader
+            onDataChange={(data) => {
+              // Transform the data to match the new structure
+              const transformedData = {
+                title: data.title || '',
+                description: data.description || '',
+                image: data.image || '',
+                watchTrailer: data.watchTrailer || ''
+              };
+              updateHeader(transformedData);
+            }}
             onFileUpload={handleFileUpload}
           />
-          <Brochure 
+  
+          <Brochure
             onDataChange={updateBrochure}
             onFileUpload={handleFileUpload}
           />
-          <LocationWorkshop 
+
+          <AboutWorkshop
+            onDataChange={updateAbout}
+            onFileUpload={handleFileUpload}
+          />
+
+          <LocationWorkshop
             onDataChange={updateLocation}
             onFileUpload={handleFileUpload}
           />
-          <WorkshopSubHeroPage 
-            subHeroHeading={currentWorkshop?.subHeroHeading || ''}
-            onSubHeroHeadingChange={updateSubHeroHeading}
-          />
-          
-          <WorkshopSkillsRequired
-            skills={currentWorkshop?.skills || { headingOfSection: '', skills: [] }}
-            onSkillsChange={updateSkills}
+
+          <WorkshopItinerary
+            onDataChange={updateItinerary}
+            onDatesChange={updateDates}
+            onFileUpload={handleFileUpload}
           />
 
         </div>
         <div className="space-y-6">
-          <WorkshopType 
-            onTypeChange={updateWorkshopType}
+
+          <WorkshopSubHeroPage
+            subHeroHeading={currentWorkshop?.subHeroHeading || ''}
+            onSubHeroHeadingChange={updateSubHeroHeading}
           />
-          <AboutWorkshop 
-            onDataChange={updateAbout}
-            onFileUpload={handleFileUpload}
+
+          <WorkshopSkillsRequired
+            skills={currentWorkshop?.skills || { skills: [] }}
+            onSkillsChange={updateSkills}
           />
 
           <WorkshopCreatorSection
@@ -168,18 +187,28 @@ export default function WorkshopElement() {
             onCreatorChange={updateCreator}
             onFileUpload={handleFileUpload}
           />
-          
+
           <WorkshopMentor
             mentor={currentWorkshop?.mentor || { name: '', description: '', mentorName: '', about: '', mentorImage: '' }}
             onMentorChange={updateMentor}
             onFileUpload={handleFileUpload}
           />
-          
-          <WorkshopItinerary 
-            onDataChange={updateItinerary}
-            onDatesChange={updateDates}
+
+          <WorkshopType
+            onTypeChange={updateWorkshopType}
+          />
+
+          <WorkshopCategory
+            category={currentWorkshop?.category || ''}
+            onCategoryChange={updateCategory}
+          />
+
+          <WorkshopThumbnail
+            thumbnail={currentWorkshop?.thumbnail || ''}
+            onThumbnailChange={updateThumbnail}
             onFileUpload={handleFileUpload}
           />
+
         </div>
       </div>
     </div>

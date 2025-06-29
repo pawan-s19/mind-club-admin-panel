@@ -62,7 +62,7 @@ export default function WorkshopHeader({ onDataChange, onFileUpload }: WorkshopH
     <ComponentCard title="Workshop Header (Section 1)">
       <div className="space-y-6">
         <div>
-          <Label htmlFor="title">Title</Label>
+          <Label htmlFor="title">Section 1 Title</Label>
           <Input 
             type="text" 
             id="title" 
@@ -71,7 +71,7 @@ export default function WorkshopHeader({ onDataChange, onFileUpload }: WorkshopH
           />
         </div>
         <div>
-          <Label htmlFor="description">Description</Label>
+          <Label htmlFor="description">Section 1 Description</Label>
           <Input 
             type="text" 
             id="description" 
@@ -90,16 +90,16 @@ export default function WorkshopHeader({ onDataChange, onFileUpload }: WorkshopH
           />
         </div> */}
         <div>
-          <Label>Image</Label>
+          <Label>Section 1 Image/Video</Label>
           <FileInput onChange={handleImageChange} className="custom-class" />
           {imageFile && (
             <div className="mt-2 text-sm text-green-600">
-              Image uploaded successfully
+              Image/Video uploaded successfully
             </div>
           )}
         </div>
         <div>
-          <Label>Watch Trailer</Label>
+          <Label>Section 1 Watch Trailer</Label>
           <div className="relative">
             <FileInput onChange={handleTrailerChange} className="custom-class" />
           </div>

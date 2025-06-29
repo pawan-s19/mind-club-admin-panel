@@ -13,13 +13,13 @@ export interface WorkshopData {
   header: {
     title: string;
     description: string;
-    image: {
-      url: string; // base64 string or URL
-    };
+    image: string; // base64 string
     watchTrailer: string; // base64 string
   };
   brochure: string; // base64 string
   workshopType: 'online' | 'on field';
+  category: string;
+  thumbnail: string; // base64 string
   about: {
     title: string;
     description: string;
@@ -39,24 +39,20 @@ export interface WorkshopData {
   };
   startDate: string; // ISO date string
   endDate: string; // ISO date string
-  itinerary: Array<{
-    day: number;
-    itineraryBanner: string; // base64 string
+  itinerary: {
     title: string;
     description: string;
+    itineraryDays: Array<{
+      day: number;
+      title: string;
     activities: Array<{
-      time: string;
-      activity: string;
-      image: {
         imageOrVideo: string; // base64 string
         description: string;
-      };
-      color: string;
+      }>;
     }>;
-  }>;
+  };
   subHeroHeading: string;
   skills: {
-    headingOfSection: string;
     skills: string[];
   };
   creators: {
@@ -88,13 +84,13 @@ const initialState: WorkshopState = {
     header: {
       title: '',
       description: '',
-      image: {
-        url: ''
-      },
+      image: '',
       watchTrailer: ''
     },
     brochure: '',
     workshopType: 'online',
+    category: '',
+    thumbnail: '',
     about: {
       title: '',
       description: '',
@@ -107,10 +103,13 @@ const initialState: WorkshopState = {
     },
     startDate: new Date().toISOString(),
     endDate: new Date().toISOString(),
-    itinerary: [],
+    itinerary: {
+      title: '',
+      description: '',
+      itineraryDays: []
+    },
     subHeroHeading: '',
     skills: {
-      headingOfSection: '',
       skills: [],
     },
     creators: {
@@ -214,6 +213,16 @@ const workshopSlice = createSlice({
         state.currentWorkshop.workshopType = action.payload;
       }
     },
+    updateCategory: (state, action: PayloadAction<string>) => {
+      if (state.currentWorkshop) {
+        state.currentWorkshop.category = action.payload;
+      }
+    },
+    updateThumbnail: (state, action: PayloadAction<string>) => {
+      if (state.currentWorkshop) {
+        state.currentWorkshop.thumbnail = action.payload;
+      }
+    },
     updateAbout: (state, action: PayloadAction<Partial<WorkshopData['about']>>) => {
       if (state.currentWorkshop) {
         state.currentWorkshop.about = { ...state.currentWorkshop.about, ...action.payload };
@@ -241,7 +250,7 @@ const workshopSlice = createSlice({
         state.currentWorkshop.subHeroHeading = action.payload;
       }
     },
-    updateSkills: (state, action: PayloadAction<{ headingOfSection: string; skills: string[] }>) => {
+    updateSkills: (state, action: PayloadAction<{ skills: string[] }>) => {
       if (state.currentWorkshop) {
         state.currentWorkshop.skills = action.payload;
       }
@@ -362,6 +371,8 @@ export const {
   updateHeader,
   updateBrochure,
   updateWorkshopType,
+  updateCategory,
+  updateThumbnail,
   updateAbout,
   updateLocation,
   updateItinerary,

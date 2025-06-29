@@ -3,15 +3,11 @@ import { Modal } from "../ui/modal";
 import Button from "../ui/button/Button";
 import Input from "../form/input/InputField";
 import Label from "../form/Label";
-import TextArea from "../form/input/TextArea";
-import FileInput from "../form/input/FileInput";
-import { useState, ChangeEvent, FormEvent } from "react";
+import { useState, ChangeEvent, KeyboardEvent } from "react";
 import { useDispatch } from "react-redux";
-import { updateWorkshop, updateWorkshopskills } from "../../store/workshopSlice";
+import { updateWorkshop } from "../../store/workshopSlice";
 import { AppDispatch } from "../../store/store";
-import { updateWorkshopskillsApi } from "../../api/workshopApi";
 import Badge from "../ui/badge/Badge";
-import React from "react";
 
 interface WorkshopSkillsCardProps {
     skills: any; // Replace 'any' with your actual skills type if available
@@ -23,18 +19,12 @@ export default function WorkshopSkillsCard({ skills, workshopId }: WorkshopSkill
 
     // State for form fields
     const [form, setForm] = useState({
-        headingOfSection: skills?.headingOfSection || "",
         skills: Array.isArray(skills?.skills) ? [...skills.skills] : [],
     });
     // Add state for new skill input
     const [newSkill, setNewSkill] = useState("");
 
     const dispatch = useDispatch<AppDispatch>();
-
-    // Handle input changes
-    const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
-    };
 
     // Add a new skill
     const handleAddSkill = () => {
@@ -51,7 +41,7 @@ export default function WorkshopSkillsCard({ skills, workshopId }: WorkshopSkill
     };
 
     // Allow Enter key to add skill
-    const handleSkillInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const handleSkillInputKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter") {
             e.preventDefault();
             handleAddSkill();
@@ -59,8 +49,7 @@ export default function WorkshopSkillsCard({ skills, workshopId }: WorkshopSkill
     };
 
     // Save handler
-    const handleSave = async (e: FormEvent) => {
-        e.preventDefault();
+    const handleSave = async () => {
         try {
             await dispatch(updateWorkshop({
                 id: workshopId,
@@ -77,17 +66,17 @@ export default function WorkshopSkillsCard({ skills, workshopId }: WorkshopSkill
         <>
             <div className="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
                 <h4 className="mb-2 text-lg font-semibold text-center text-gray-800 dark:text-white/90 xl:text-left">
-                    skills
+                    Skills
                 </h4>
                 <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
                     <div className="flex flex-col items-center w-full gap-6 xl:flex-row">
 
                         <div className="order-3 xl:order-2">
                             <h4 className="mb-2 text-lg font-semibold text-center text-gray-800 dark:text-white/90 xl:text-left">
-                                {skills?.headingOfSection}
+                                Workshop Skills
                             </h4>
                             <div className="flex flex-col items-center gap-1 text-center xl:flex-row xl:gap-3 xl:text-left">
-                                {skills?.skills?.map((value, index) => (
+                                {skills?.skills?.map((value: string, index: number) => (
 
                                     <Badge
                                         size="sm"
@@ -126,29 +115,20 @@ export default function WorkshopSkillsCard({ skills, workshopId }: WorkshopSkill
                 <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
                     <div className="px-2 pr-14">
                         <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
-                            Edit skills
+                            Edit Skills
                         </h4>
                         <p className="mb-6 text-sm text-gray-500 dark:text-gray-400 lg:mb-7">
                             Update your details to keep your skills up-to-date.
                         </p>
                     </div>
-                    <form className="flex flex-col">
+                    <div className="flex flex-col">
                         <div className="custom-scrollbar h-[450px] overflow-y-auto px-2 pb-3">
                             <div>
                                 <h5 className="mb-5 text-lg font-medium text-gray-800 dark:text-white/90 lg:mb-6">
-                                    Workshop skills (Section 1)
+                                    Workshop Skills
                                 </h5>
 
                                 <div className="flex flex-col gap-2">
-                                    <div>
-                                        <Label>headingOfSection</Label>
-                                        <Input
-                                            type="text"
-                                            name="headingOfSection"
-                                            value={form.headingOfSection}
-                                            onChange={handleChange}
-                                        />
-                                    </div>
                                     <div>
                                         <Label>Skills</Label>
                                         <div className="flex flex-wrap gap-2 mb-2">
@@ -172,12 +152,13 @@ export default function WorkshopSkillsCard({ skills, workshopId }: WorkshopSkill
                                             ))}
                                         </div>
                                         <div className="flex gap-2">
-                                            <Input
+                                            <input
                                                 type="text"
                                                 value={newSkill}
                                                 onChange={e => setNewSkill(e.target.value)}
                                                 onKeyDown={handleSkillInputKeyDown}
                                                 placeholder="Add a skill and press Enter"
+                                                className="focus:border-ring-brand-300 h-11 w-full overflow-hidden rounded-lg border border-gray-300 bg-transparent text-sm text-gray-500 shadow-theme-xs transition-colors placeholder:text-gray-400 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-400 dark:text-white/90 dark:placeholder:text-gray-400"
                                             />
                                             <Button
                                                 type="button"
@@ -196,11 +177,11 @@ export default function WorkshopSkillsCard({ skills, workshopId }: WorkshopSkill
                             <Button size="sm" variant="outline" onClick={closeModal}>
                                 Close
                             </Button>
-                            <Button size="sm" onClick={e => handleSave(e as unknown as FormEvent)}>
+                            <Button size="sm" onClick={handleSave}>
                                 Save Changes
                             </Button>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </Modal>
         </>

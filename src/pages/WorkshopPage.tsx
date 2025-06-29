@@ -17,6 +17,9 @@ import WorkshopSkillsCard from "../components/UserProfile/WorkshopSkillsCard";
 import WorkshopCreator from "../components/UserProfile/WorkshopCreator";
 import WorkshopMentor from "../components/form/form-elements/WorkshopMentor";
 import WorkshopMentorCard from "../components/UserProfile/WorkshopMentorCard";
+import WorkshopThumbnailCard from "../components/UserProfile/WorkshopThumbnailCard";
+import WorkshopCategoryCard from "../components/UserProfile/WorkshopCategoryCard";
+import WorkshopItineraryCard from "../components/UserProfile/WorkshopItineraryCard";
 import Button from "../components/ui/button/Button";
 import { useNavigate } from "react-router-dom";
 
@@ -87,18 +90,19 @@ export default function WorkshopPage() {
         </div>
         
         <div className="space-y-6">
-          <WorkshopHeaderCard header={currentWorkshop?.data?.header} workshopId={id} />
-          <WorkshopBrochureCard  brochure={currentWorkshop?.data?.brochure} workshopId={id} />
-          <WorkshopaboutCard  about={currentWorkshop?.data?.about} workshopId={id} />
-          <WorkshopLocationCard location={currentWorkshop?.data?.location} workshopId={id} />
-          <WorkshopSkillsCard skills={currentWorkshop?.data?.skills} workshopId={id} />
-          <WorkshopCreator creator={currentWorkshop?.data?.creators} workshopId={id} />
-          <WorkshopMentorCard mentor={currentWorkshop?.data?.mentor} workshopId={id} />
+          <WorkshopHeaderCard header={currentWorkshop?.data?.header} workshopId={id || ''} />
+          <WorkshopBrochureCard brochure={currentWorkshop?.data?.brochure} workshopId={id || ''} />
+          <WorkshopThumbnailCard thumbnail={currentWorkshop?.data?.thumbnail} workshopId={id || ''} />
+          <WorkshopCategoryCard category={currentWorkshop?.data?.category} workshopId={id || ''} />
+          <WorkshopaboutCard about={currentWorkshop?.data?.about} workshopId={id || ''} />
+          <WorkshopLocationCard location={currentWorkshop?.data?.location} workshopId={id || ''} />
+          <WorkshopItineraryCard itinerary={currentWorkshop?.data?.itinerary} workshopId={id || ''} />
+          <WorkshopSkillsCard skills={currentWorkshop?.data?.skills} workshopId={id || ''} />
+          <WorkshopCreator creator={currentWorkshop?.data?.creators} workshopId={id || ''} />
+          <WorkshopMentorCard mentor={currentWorkshop?.data?.mentor} workshopId={id || ''} />
           {/* <UserInfoCard /> */}
           {/* <UserAddressCard /> */}
         </div>
-
-        {JSON.stringify(  currentWorkshop?.data?.Brochere)}
       </div>
     </>
   );

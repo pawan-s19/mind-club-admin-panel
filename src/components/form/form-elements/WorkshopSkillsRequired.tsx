@@ -3,10 +3,9 @@ import ComponentCard from "../../common/ComponentCard";
 
 interface WorkshopSkillsRequiredProps {
     skills: {
-        headingOfSection: string;
         skills: string[];
     };
-    onSkillsChange: (skills: { headingOfSection: string; skills: string[] }) => void;
+    onSkillsChange: (skills: { skills: string[] }) => void;
 }
 
 export default function WorkshopSkillsRequired({
@@ -16,7 +15,7 @@ export default function WorkshopSkillsRequired({
     // Provide default values to prevent runtime errors
     const safeSkills = skills && Array.isArray(skills.skills)
         ? skills
-        : { headingOfSection: '', skills: [] };
+        : { skills: [] };
     const safeOnSkillsChange = typeof onSkillsChange === 'function'
         ? onSkillsChange
         : () => {};
@@ -27,7 +26,6 @@ export default function WorkshopSkillsRequired({
         const trimmedSkill = inputSkill.trim();
         if (trimmedSkill && !safeSkills.skills.includes(trimmedSkill)) {
             safeOnSkillsChange({
-                ...safeSkills,
                 skills: [...safeSkills.skills, trimmedSkill],
             });
             setInputSkill("");
@@ -36,18 +34,11 @@ export default function WorkshopSkillsRequired({
 
     const handleRemoveSkill = (index: number) => {
         const newSkills = safeSkills.skills.filter((_, i) => i !== index);
-        safeOnSkillsChange({ ...safeSkills, skills: newSkills });
+        safeOnSkillsChange({ skills: newSkills });
     };
 
     return (
         <ComponentCard title="Workshop Skills Required (Section 6)">
-            <input
-                type="text"
-                className="w-full p-2 border rounded mb-2"
-                placeholder="Section Heading"
-                value={safeSkills.headingOfSection}
-                onChange={e => safeOnSkillsChange({ ...safeSkills, headingOfSection: e.target.value })}
-            />
             <div className="flex mb-2">
                 <input
                     type="text"

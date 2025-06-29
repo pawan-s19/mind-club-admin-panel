@@ -44,6 +44,7 @@ const navItems: NavItem[] = [
     name: "Forms",
     icon: <ListIcon />,
     subItems: [{ name: "Workshop Create", path: "/workshop-create", pro: false },
+      // { name: "Landing Management", path: "/landing-management", pro: false },
       // { name: "Workshop List", path: "/workshop-list", pro: false },
       // { name: "Workshop Edit", path: "/workshop-edit", pro: false },
     ]
@@ -52,7 +53,8 @@ const navItems: NavItem[] = [
     name: "Tables",
     icon: <TableIcon />,
     subItems: [
-      { name: "Workshop Tables", path: "/workshop-tables", pro: false }
+      { name: "Workshop Tables", path: "/workshop-tables", pro: false },
+      { name: "Landing Tables", path: "/landing-tables", pro: false }
     ],
   },
   {

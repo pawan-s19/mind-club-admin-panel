@@ -1,13 +1,12 @@
 // Online Workshop API service
 
-const API_BASE_URL = 
-"https://mind-club-backend-1.onrender.com/api"
+// const API_BASE_URL = "https://mind-club-backend-1.onrender.com/api";
 //  ||
-//  'http://localhost:5000/api';
+const API_BASE_URL =   'http://localhost:5000/api';
 
 // Get auth token from localStorage
 const getAuthToken = (): string | null => {
-  return localStorage.getItem('token');
+  return localStorage.getItem("token");
 };
 
 // Online Workshop API functions
@@ -16,21 +15,23 @@ export const onlineWorkshopApi = {
   createOnlineWorkshop: async (workshopData: any) => {
     const token = getAuthToken();
     if (!token) {
-      throw new Error('No authentication token found');
+      throw new Error("No authentication token found");
     }
-
+    console.log(workshopData, "workshotpdata");
     const response = await fetch(`${API_BASE_URL}/online-workshops`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(workshopData),
     });
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+      throw new Error(
+        errorData.message || `HTTP error! status: ${response.status}`
+      );
     }
 
     return await response.json();
@@ -40,19 +41,21 @@ export const onlineWorkshopApi = {
   getOnlineWorkshops: async () => {
     const token = getAuthToken();
     if (!token) {
-      throw new Error('No authentication token found');
+      throw new Error("No authentication token found");
     }
 
     const response = await fetch(`${API_BASE_URL}/online-workshops`, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+      throw new Error(
+        errorData.message || `HTTP error! status: ${response.status}`
+      );
     }
 
     const result = await response.json();
@@ -64,19 +67,21 @@ export const onlineWorkshopApi = {
   getOnlineWorkshopById: async (id: string) => {
     const token = getAuthToken();
     if (!token) {
-      throw new Error('No authentication token found');
+      throw new Error("No authentication token found");
     }
 
     const response = await fetch(`${API_BASE_URL}/online-workshops/${id}`, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+      throw new Error(
+        errorData.message || `HTTP error! status: ${response.status}`
+      );
     }
 
     const result = await response.json();
@@ -88,21 +93,25 @@ export const onlineWorkshopApi = {
   updateOnlineWorkshop: async (id: string, workshopData: any) => {
     const token = getAuthToken();
     if (!token) {
-      throw new Error('No authentication token found');
+      throw new Error("No authentication token found");
     }
 
+    console.log(workshopData, 'workshopdata')
+
     const response = await fetch(`${API_BASE_URL}/online-workshops/${id}`, {
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(workshopData),
     });
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+      throw new Error(
+        errorData.message || `HTTP error! status: ${response.status}`
+      );
     }
 
     const result = await response.json();
@@ -114,21 +123,23 @@ export const onlineWorkshopApi = {
   deleteOnlineWorkshop: async (id: string) => {
     const token = getAuthToken();
     if (!token) {
-      throw new Error('No authentication token found');
+      throw new Error("No authentication token found");
     }
 
     const response = await fetch(`${API_BASE_URL}/online-workshops/${id}`, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: {
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+      throw new Error(
+        errorData.message || `HTTP error! status: ${response.status}`
+      );
     }
 
     return await response.json();
   },
-}; 
+};

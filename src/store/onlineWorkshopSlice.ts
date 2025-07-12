@@ -187,6 +187,7 @@ export const updateOnlineWorkshop = createAsyncThunk(
 export const deleteOnlineWorkshop = createAsyncThunk(
   "onlineWorkshop/deleteOnlineWorkshop",
   async (id: string, thunkAPI) => {
+    console.log(id, 'this is the id')
     try {
       const data = await onlineWorkshopApi.deleteOnlineWorkshop(id);
       return { id, data };

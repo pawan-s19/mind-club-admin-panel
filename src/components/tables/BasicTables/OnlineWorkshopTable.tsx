@@ -1,19 +1,26 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { OnlineWorkshopData } from '../../../store/onlineWorkshopSlice';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { deleteOnlineWorkshop, OnlineWorkshopData } from "../../../store/onlineWorkshopSlice";
+import { useDispatch } from "react-redux";
 
 interface OnlineWorkshopTableProps {
   onlineWorkshops: OnlineWorkshopData[];
   loading: boolean;
 }
 
-const OnlineWorkshopTable: React.FC<OnlineWorkshopTableProps> = ({ onlineWorkshops, loading }) => {
+const OnlineWorkshopTable: React.FC<OnlineWorkshopTableProps> = ({
+  onlineWorkshops,
+  loading,
+}) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   if (loading) {
     return (
       <div className="flex items-center justify-center py-8">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-        <span className="ml-2 text-sm text-gray-600">Loading online workshops...</span>
+        <span className="ml-2 text-sm text-gray-600">
+          Loading online workshops...
+        </span>
       </div>
     );
   }
@@ -27,23 +34,23 @@ const OnlineWorkshopTable: React.FC<OnlineWorkshopTableProps> = ({ onlineWorksho
   }
 
   const formatDate = (dateString: string) => {
-    if (!dateString) return 'N/A';
+    if (!dateString) return "N/A";
     try {
-      return new Date(dateString).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
+      return new Date(dateString).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
       });
     } catch (error) {
-      return 'Invalid Date';
+      return "Invalid Date";
     }
   };
 
-  const formatPrice = (amount: number, currency: string = 'INR') => {
-    return new Intl.NumberFormat('en-IN', {
-      style: 'currency',
+  const formatPrice = (amount: number, currency: string = "INR") => {
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
       currency: currency,
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
@@ -72,6 +79,8 @@ const OnlineWorkshopTable: React.FC<OnlineWorkshopTableProps> = ({ onlineWorksho
     return 0;
   };
 
+  console.log(onlineWorkshops, "online workshops");
+
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
       <div className="max-w-full overflow-x-auto">
@@ -96,9 +105,12 @@ const OnlineWorkshopTable: React.FC<OnlineWorkshopTableProps> = ({ onlineWorksho
               <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
                 End Date
               </th>
-                             <th className="min-w-[100px] py-4 px-4 font-medium text-black dark:text-white">
-                 View
-               </th>
+              <th className="min-w-[100px] py-4 px-4 font-medium text-black dark:text-white">
+                View
+              </th>
+              <th className="min-w-[100px] py-4 px-4 font-medium text-black dark:text-white">
+                Delete
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -117,7 +129,7 @@ const OnlineWorkshopTable: React.FC<OnlineWorkshopTableProps> = ({ onlineWorksho
                     )}
                     <div>
                       <h5 className="font-medium text-black dark:text-white">
-                        {workshop.workshopHeader.title || 'Untitled Workshop'}
+                        {workshop.workshopHeader.title || "Untitled Workshop"}
                       </h5>
                       {workshop.workshopHeader.subtitle && (
                         <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -137,17 +149,20 @@ const OnlineWorkshopTable: React.FC<OnlineWorkshopTableProps> = ({ onlineWorksho
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <span className="text-black dark:text-white">
-                    {formatPrice(workshop.price.amount, workshop.price.currency)}
+                    {formatPrice(
+                      workshop.price.amount,
+                      workshop.price.currency
+                    )}
                   </span>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <span className="text-black dark:text-white">
-                    {workshop.workshopHighlights.duration || 'N/A'}
+                    {workshop.workshopHighlights.duration || "N/A"}
                   </span>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <span className="text-black dark:text-white">
-                    {workshop.workshopHighlights.spots || 'N/A'}
+                    {workshop.workshopHighlights.spots || "N/A"}
                   </span>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
@@ -161,9 +176,9 @@ const OnlineWorkshopTable: React.FC<OnlineWorkshopTableProps> = ({ onlineWorksho
                   </span>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <button 
+                  <button
                     onClick={() => navigate(`/online-workshop/${workshop._id}`)}
-                    className="hover:text-primary" 
+                    className="hover:text-primary"
                     title="View Details"
                   >
                     <svg
@@ -185,6 +200,25 @@ const OnlineWorkshopTable: React.FC<OnlineWorkshopTableProps> = ({ onlineWorksho
                     </svg>
                   </button>
                 </td>
+                <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                  <button
+                    onClick={() => {console.log('hello'); dispatch(deleteOnlineWorkshop(workshop._id))}}
+                    className="hover:text-primary"
+                    title="View Details"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="red"
+                      class="bi bi-trash"
+                      viewBox="0 0 16 16"
+                    >
+                      <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
+                      <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
+                    </svg>
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -194,4 +228,4 @@ const OnlineWorkshopTable: React.FC<OnlineWorkshopTableProps> = ({ onlineWorksho
   );
 };
 
-export default OnlineWorkshopTable; 
+export default OnlineWorkshopTable;

@@ -57,7 +57,7 @@ const OnlineWorkshopHeaderCard: React.FC<OnlineWorkshopHeaderCardProps> = ({ hea
   };
 
   // Save handler
-  const handleSave = async (e: FormEvent) => {
+  const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const updatedHeader = {
@@ -226,7 +226,7 @@ const OnlineWorkshopHeaderCard: React.FC<OnlineWorkshopHeaderCardProps> = ({ hea
               <Button size="sm" variant="outline" onClick={closeModal}>
                 Close
               </Button>
-              <Button size="sm" onClick={() => handleSave({} as FormEvent)}>
+              <Button size="sm" onClick={handleSave}>
                 Save Changes
               </Button>
             </div>

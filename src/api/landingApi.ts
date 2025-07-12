@@ -1,5 +1,5 @@
 const API_BASE_URL = 
-"https://mind-club-backend-1.onrender.com/api"
+"https://mind-club-backend-1df6.onrender.com/api"
 //  ||
 //  'http://localhost:5000/api';
 const LANDING_API_URL = `${API_BASE_URL}/landing`;
